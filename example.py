@@ -163,7 +163,7 @@ class ApiRos:
 				raise RuntimeError("connection closed by remote end")
 			n += r
 
-	def readStr(self, length):
+	def readStr(self, length: int) -> str:
 		ret = ""
 		# print ("length: %i" % length)
 		while len(ret) < length:
@@ -173,7 +173,7 @@ class ApiRos:
 			# print (b">>>" + s)
 			# atgriezt kaa byte ja nav ascii chars
 			if s >= (128).to_bytes(1, "big"):
-				return s
+				return s.decode("UTF-8")
 			# print((">>> " + s.decode(sys.stdout.encoding, 'ignore')))
 			ret += s.decode(sys.stdout.encoding, "replace")
 		return ret
