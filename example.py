@@ -1,7 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: latin-1 -*-
-import sys, posix, time, binascii, socket, select, ssl
+import binascii
 import hashlib
+import select
+import socket
+import ssl
+import sys
 
 
 class ApiRos:
