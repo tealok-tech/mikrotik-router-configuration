@@ -86,31 +86,31 @@ class ApiRos:
 		print((">>> " + ret))
 		return ret
 
-	def writeLen(self, l):
-		if l < 0x80:
-			self.writeByte((l).to_bytes(1, sys.byteorder))
-		elif l < 0x4000:
-			l |= 0x8000
-			tmp = (l >> 8) & 0xFF
-			self.writeByte(((l >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte((l & 0xFF).to_bytes(1, sys.byteorder))
-		elif l < 0x200000:
-			l |= 0xC00000
-			self.writeByte(((l >> 16) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte(((l >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte((l & 0xFF).to_bytes(1, sys.byteorder))
-		elif l < 0x10000000:
-			l |= 0xE0000000
-			self.writeByte(((l >> 24) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte(((l >> 16) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte(((l >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte((l & 0xFF).to_bytes(1, sys.byteorder))
+	def writeLen(self, length: int) -> None:
+		if length < 0x80:
+			self.writeByte((length).to_bytes(1, sys.byteorder))
+		elif length < 0x4000:
+			length |= 0x8000
+			tmp = (length >> 8) & 0xFF
+			self.writeByte(((length >> 8) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
+		elif length < 0x200000:
+			length |= 0xC00000
+			self.writeByte(((length >> 16) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte(((length >> 8) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
+		elif length < 0x10000000:
+			length |= 0xE0000000
+			self.writeByte(((length >> 24) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte(((length >> 16) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte(((length >> 8) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
 		else:
 			self.writeByte((0xF0).to_bytes(1, sys.byteorder))
-			self.writeByte(((l >> 24) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte(((l >> 16) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte(((l >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-			self.writeByte((l & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte(((length >> 24) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte(((length >> 16) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte(((length >> 8) & 0xFF).to_bytes(1, sys.byteorder))
+			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
 
 	def readLen(self):
 		c = ord(self.readStr(1))
@@ -231,16 +231,16 @@ def main():
 
 		if sys.stdin in r[0]:
 			# read line from input and strip off newline
-			l = sys.stdin.readline()
-			l = l[:-1]
+			length = sys.stdin.readline()
+			length = length[:-1]
 
 			# if empty line, send sentence and start with new
 			# otherwise append to input sentence
-			if l == "":
+			if length == "":
 				apiros.writeSentence(inputsentence)
 				inputsentence = []
 			else:
-				inputsentence.append(l)
+				inputsentence.append(length)
 
 
 if __name__ == "__main__":
