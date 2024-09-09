@@ -1,0 +1,16 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "mikrotik-router-configuration"
+version = "0.1.0"
+description = "A tool for configuring Mikrotik routers"
+authors = ["Eli Ribble <eli@theribbles.org>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.ruff.format]
+indent-style = "tab"
