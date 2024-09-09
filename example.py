@@ -3,12 +3,16 @@
 import argparse
 import binascii
 import hashlib
+import logging
 import select
 import socket
 import ssl
 import sys
 
 from typing import List
+
+
+LOGGER = logging.getLogger("example")
 
 
 class ApiRos:
@@ -165,16 +169,16 @@ class ApiRos:
 
 	def readStr(self, length: int) -> str:
 		ret = ""
-		# print ("length: %i" % length)
+		LOGGER.debug("length: %i", length)
 		while len(ret) < length:
 			s = self.socket.recv(length - len(ret))
 			if s == b"":
 				raise RuntimeError("connection closed by remote end")
-			# print (b">>>" + s)
+			LOGGER.debug(b">>>" + s)
 			# atgriezt kaa byte ja nav ascii chars
 			if s >= (128).to_bytes(1, "big"):
 				return s.decode("UTF-8")
-			# print((">>> " + s.decode(sys.stdout.encoding, 'ignore')))
+			LOGGER.debug((">>> " + s.decode(sys.stdout.encoding, "ignore")))
 			ret += s.decode(sys.stdout.encoding, "replace")
 		return ret
 
@@ -210,7 +214,12 @@ def main() -> None:
 		action="store_true",
 		help="If present, use a secure connection on port 8729. Otherwise use the default insecure on 8728",
 	)
+	parser.add_argument(
+		"--verbose", "-v", action="store_true", help="If present show verbose logging"
+	)
 	args = parser.parse_args()
+
+	logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
 
 	s = None
 	port = 8729 if args.secure else 8728
