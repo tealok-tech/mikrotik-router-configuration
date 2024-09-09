@@ -9,7 +9,7 @@ import socket
 import ssl
 import sys
 
-from typing import List
+from typing import Dict, List, Tuple
 
 
 LOGGER = logging.getLogger("example")
@@ -47,10 +47,10 @@ class ApiRos:
 						return False
 		return True
 
-	def talk(self, words):
+	def talk(self, words: List[str]) -> List[Tuple[str, Dict[str, str]]]:
 		if self.writeSentence(words) == 0:
-			return
-		r = []
+			return []
+		r: List[Tuple[str, Dict[str, str]]] = []
 		while True:
 			i = self.readSentence()
 			if len(i) == 0:
@@ -67,7 +67,8 @@ class ApiRos:
 			if reply == "!done":
 				return r
 
-	def writeSentence(self, words):
+	def writeSentence(self, words: List[str]) -> int:
+		"Write the given words, return the total words written"
 		ret = 0
 		for w in words:
 			self.writeWord(w)
@@ -75,20 +76,20 @@ class ApiRos:
 		self.writeWord("")
 		return ret
 
-	def readSentence(self):
-		r = []
-		while 1:
+	def readSentence(self) -> List[str]:
+		r: List[str] = []
+		while True:
 			w = self.readWord()
 			if w == "":
 				return r
 			r.append(w)
 
-	def writeWord(self, w):
+	def writeWord(self, w: str) -> None:
 		print(("<<< " + w))
 		self.writeLen(len(w))
 		self.writeStr(w)
 
-	def readWord(self):
+	def readWord(self) -> str:
 		ret = self.readStr(self.readLen())
 		print((">>> " + ret))
 		return ret
@@ -118,7 +119,7 @@ class ApiRos:
 			self.writeByte(((length >> 8) & 0xFF).to_bytes(1, sys.byteorder))
 			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
 
-	def readLen(self):
+	def readLen(self) -> int:
 		c = ord(self.readByte())
 		# print (">rl> %i" % c)
 		if (c & 0x80) == 0x00:
