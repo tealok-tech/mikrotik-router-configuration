@@ -14,8 +14,8 @@ from typing import List
 class ApiRos:
 	"Routeros api"
 
-	def __init__(self, sk):
-		self.sk = sk
+	def __init__(self, sk: socket.socket) -> None:
+		self.socket = sk
 		self.currenttag = 0
 
 	def login(self, username, pwd):
@@ -150,7 +150,7 @@ class ApiRos:
 	def writeStr(self, str):
 		n = 0
 		while n < len(str):
-			r = self.sk.send(bytes(str[n:], "UTF-8"))
+			r = self.socket.send(bytes(str[n:], "UTF-8"))
 			if r == 0:
 				raise RuntimeError("connection closed by remote end")
 			n += r
@@ -158,7 +158,7 @@ class ApiRos:
 	def writeByte(self, str):
 		n = 0
 		while n < len(str):
-			r = self.sk.send(str[n:])
+			r = self.socket.send(str[n:])
 			if r == 0:
 				raise RuntimeError("connection closed by remote end")
 			n += r
@@ -167,7 +167,7 @@ class ApiRos:
 		ret = ""
 		# print ("length: %i" % length)
 		while len(ret) < length:
-			s = self.sk.recv(length - len(ret))
+			s = self.socket.recv(length - len(ret))
 			if s == b"":
 				raise RuntimeError("connection closed by remote end")
 			# print (b">>>" + s)
