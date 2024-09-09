@@ -147,10 +147,10 @@ class ApiRos:
 			c += ord(self.readStr(1))
 		return c
 
-	def writeStr(self, str):
+	def writeStr(self, buffer: str) -> None:
 		n = 0
-		while n < len(str):
-			r = self.socket.send(bytes(str[n:], "UTF-8"))
+		while n < len(buffer):
+			r = self.socket.send(bytes(buffer[n:], "UTF-8"))
 			if r == 0:
 				raise RuntimeError("connection closed by remote end")
 			n += r
