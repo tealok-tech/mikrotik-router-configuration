@@ -51,7 +51,7 @@ class ApiRos:
 		if self.writeSentence(words) == 0:
 			return
 		r = []
-		while 1:
+		while True:
 			i = self.readSentence()
 			if len(i) == 0:
 				continue
