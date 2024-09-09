@@ -177,7 +177,7 @@ class ApiRos:
 		return ret
 
 
-def open_socket(dst, port, secure=False):
+def open_socket(dst, port: int, secure=False) -> socket.socket:
 	s = None
 	res = socket.getaddrinfo(dst, port, socket.AF_UNSPEC, socket.SOCK_STREAM)
 	af, socktype, proto, canonname, sockaddr = res[0]
@@ -197,21 +197,13 @@ def main() -> None:
 	parser.add_argument("destination", help="The address of the Mikrotik router to communicate with")
 	parser.add_argument("user", default="admin", help="The username to use for authentication")
 	parser.add_argument("password", default="", help="The password to authenticate with")
+	parser.add_argument("--secure", "-s", action="store_true", help="If present, use a secure connection on port 8729. Otherwise use the default insecure on 8728")
 	args = parser.parse_args()
 
 	s = None
-	secure = False
-	port = 0
+	port = 8729 if args.secure else 8728
 
-	# use default username and pasword if not specified
-	arg_nr = len(sys.argv)
-	if arg_nr > 4:
-		secure = sys.argv[4]
-
-	if port == 0:
-		port = 8729 if secure else 8728
-
-	s = open_socket(args.destination, port, secure)
+	s = open_socket(args.destination, port, args.secure)
 	if s is None:
 		print("could not open socket")
 		sys.exit(1)
