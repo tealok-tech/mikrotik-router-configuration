@@ -155,10 +155,10 @@ class ApiRos:
 				raise RuntimeError("connection closed by remote end")
 			n += r
 
-	def writeByte(self, str):
+	def writeByte(self, buffer: bytes) -> None:
 		n = 0
-		while n < len(str):
-			r = self.socket.send(str[n:])
+		while n < len(buffer):
+			r = self.socket.send(buffer[n:])
 			if r == 0:
 				raise RuntimeError("connection closed by remote end")
 			n += r
