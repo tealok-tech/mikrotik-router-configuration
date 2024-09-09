@@ -91,7 +91,6 @@ class ApiRos:
 			self.writeByte((length).to_bytes(1, sys.byteorder))
 		elif length < 0x4000:
 			length |= 0x8000
-			tmp = (length >> 8) & 0xFF
 			self.writeByte(((length >> 8) & 0xFF).to_bytes(1, sys.byteorder))
 			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
 		elif length < 0x200000:
@@ -227,7 +226,7 @@ def main():
 		r = select.select([s, sys.stdin], [], [], None)
 		if s in r[0]:
 			# something to read in socket, read sentence
-			x = apiros.readSentence()
+			apiros.readSentence()
 
 		if sys.stdin in r[0]:
 			# read line from input and strip off newline
