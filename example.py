@@ -119,36 +119,36 @@ class ApiRos:
 			self.writeByte((length & 0xFF).to_bytes(1, sys.byteorder))
 
 	def readLen(self):
-		c = ord(self.readStr(1))
+		c = ord(self.readByte())
 		# print (">rl> %i" % c)
 		if (c & 0x80) == 0x00:
 			pass
 		elif (c & 0xC0) == 0x80:
 			c &= ~0xC0
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 		elif (c & 0xE0) == 0xC0:
 			c &= ~0xE0
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 		elif (c & 0xF0) == 0xE0:
 			c &= ~0xF0
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 		elif (c & 0xF8) == 0xF0:
-			c = ord(self.readStr(1))
+			c = ord(self.readByte())
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 			c <<= 8
-			c += ord(self.readStr(1))
+			c += ord(self.readByte())
 		return c
 
 	def writeStr(self, buffer: str) -> None:
@@ -167,6 +167,13 @@ class ApiRos:
 				raise RuntimeError("connection closed by remote end")
 			n += r
 
+	def readByte(self) -> bytes:
+		s = self.socket.recv(1)
+		if s == b"":
+			raise RuntimeError("connection closed by remote end")
+		LOGGER.debug(b">>>" + s)
+		return s
+
 	def readStr(self, length: int) -> str:
 		ret = ""
 		LOGGER.debug("length: %i", length)
@@ -174,11 +181,7 @@ class ApiRos:
 			s = self.socket.recv(length - len(ret))
 			if s == b"":
 				raise RuntimeError("connection closed by remote end")
-			LOGGER.debug(b">>>" + s)
-			# atgriezt kaa byte ja nav ascii chars
-			if s >= (128).to_bytes(1, "big"):
-				return s.decode("UTF-8")
-			LOGGER.debug((">>> " + s.decode(sys.stdout.encoding, "ignore")))
+			LOGGER.debug(">>> %s", s.decode("UTF-8"))
 			ret += s.decode(sys.stdout.encoding, "replace")
 		return ret
 
