@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: latin-1 -*-
+import argparse
 import binascii
 import hashlib
 import select
@@ -191,33 +192,32 @@ def open_socket(dst, port, secure=False):
 	return s
 
 
-def main():
+def main() -> None:
+	parser = argparse.ArgumentParser()
+	parser.add_argument("destination", help="The address of the Mikrotik router to communicate with")
+	parser.add_argument("user", default="admin", help="The username to use for authentication")
+	parser.add_argument("password", default="", help="The password to authenticate with")
+	args = parser.parse_args()
+
 	s = None
-	dst = sys.argv[1]
-	user = "admin"
-	passw = ""
 	secure = False
 	port = 0
 
 	# use default username and pasword if not specified
 	arg_nr = len(sys.argv)
-	if arg_nr > 2:
-		user = sys.argv[2]
-	if arg_nr > 3:
-		passw = sys.argv[3]
 	if arg_nr > 4:
 		secure = sys.argv[4]
 
 	if port == 0:
 		port = 8729 if secure else 8728
 
-	s = open_socket(dst, port, secure)
+	s = open_socket(args.destination, port, secure)
 	if s is None:
 		print("could not open socket")
 		sys.exit(1)
 
 	apiros = ApiRos(s)
-	if not apiros.login(user, passw):
+	if not apiros.login(args.user, args.password):
 		return
 
 	inputsentence = []
