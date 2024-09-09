@@ -18,7 +18,7 @@ class ApiRos:
 		self.socket = sk
 		self.currenttag = 0
 
-	def login(self, username, pwd):
+	def login(self, username: str, pwd: str) -> bool:
 		for repl, attrs in self.talk(
 			["/login", "=name=" + username, "=password=" + pwd]
 		):
