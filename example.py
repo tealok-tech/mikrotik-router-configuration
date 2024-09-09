@@ -194,10 +194,21 @@ def open_socket(dst, port: int, secure=False) -> socket.socket:
 
 def main() -> None:
 	parser = argparse.ArgumentParser()
-	parser.add_argument("destination", help="The address of the Mikrotik router to communicate with")
-	parser.add_argument("user", default="admin", help="The username to use for authentication")
-	parser.add_argument("password", default="", help="The password to authenticate with")
-	parser.add_argument("--secure", "-s", action="store_true", help="If present, use a secure connection on port 8729. Otherwise use the default insecure on 8728")
+	parser.add_argument(
+		"destination", help="The address of the Mikrotik router to communicate with"
+	)
+	parser.add_argument(
+		"user", default="admin", help="The username to use for authentication"
+	)
+	parser.add_argument(
+		"password", default="", help="The password to authenticate with"
+	)
+	parser.add_argument(
+		"--secure",
+		"-s",
+		action="store_true",
+		help="If present, use a secure connection on port 8729. Otherwise use the default insecure on 8728",
+	)
 	args = parser.parse_args()
 
 	s = None
