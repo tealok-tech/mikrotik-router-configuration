@@ -8,6 +8,8 @@ import socket
 import ssl
 import sys
 
+from typing import List
+
 
 class ApiRos:
 	"Routeros api"
@@ -177,19 +179,18 @@ class ApiRos:
 		return ret
 
 
-def open_socket(dst, port: int, secure=False) -> socket.socket:
-	s = None
+def open_socket(dst, port: int, secure=False) -> socket.socket | ssl.SSLSocket:
 	res = socket.getaddrinfo(dst, port, socket.AF_UNSPEC, socket.SOCK_STREAM)
 	af, socktype, proto, canonname, sockaddr = res[0]
 	skt = socket.socket(af, socktype, proto)
 	if secure:
-		s = ssl.wrap_socket(
+		secure = ssl.wrap_socket(
 			skt, ssl_version=ssl.PROTOCOL_TLSv1_2, ciphers="ECDHE-RSA-AES256-GCM-SHA384"
 		)  # ADH-AES128-SHA256
-	else:
-		s = skt
-	s.connect(sockaddr)
-	return s
+		secure.connect(sockaddr)
+		return secure
+	skt.connect(sockaddr)
+	return skt
 
 
 def main() -> None:
@@ -223,7 +224,7 @@ def main() -> None:
 	if not apiros.login(args.user, args.password):
 		return
 
-	inputsentence = []
+	inputsentence: List[str] = []
 
 	while 1:
 		r = select.select([s, sys.stdin], [], [], None)
