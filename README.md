@@ -4,47 +4,19 @@ A tool for configuring a Mikrotik router via their API.
 
 ## Incantations
 
-Basic proof-of-connection
+### Build
 
 ```
-<<< /login
-<<< =name=admin
-<<< =password=5LPLEPAYH4
-<<< 
->>> !done
->>> 
-/user/getall
-
-<<< /user/getall
-<<< 
->>> !re
->>> =.id=*1
->>> =name=admin
->>> =group=full
->>> =address=
->>> =last-logged-in=jan/02/1970 00:11:54
->>> =expired=false
->>> =disabled=false
->>> =comment=system default user
->>> 
->>> !done
->>> 
+$ ninja
+[1/1] Go compilation
 ```
 
-
-Basic failure to connect (wrong password)
+### Run
 
 ```
-python3 example.py 192.168.88.1 admin wrongpassword
+$ out/mikrotik-configure -address=192.168.88.1:8728 -password=foobar
 
-
-<<< /login
-<<< =name=admin
-<<< =password=5LPLEPAYH
-<<< 
->>> !trap
->>> =message=invalid user name or password (6)
->>> 
->>> !done
->>>
+ether1  745248391       72925539        1065276 497640
+ether2  73358804        661093277       497194  682146
+bridge  71296851        655508271       497175  639662
 ```
