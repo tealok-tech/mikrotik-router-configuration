@@ -1,0 +1,5 @@
+# Build output
+out/
+
+# Ninja build log
+.ninja_log

@@ -1,0 +1,8 @@
+GOARCH = amd64
+GOOS = linux
+
+rule go-compile
+  command = go build -o $out $in
+  description = Go compilation
+
+build out/mikrotik-configure: go-compile main.go
