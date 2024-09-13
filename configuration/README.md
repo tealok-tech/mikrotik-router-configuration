@@ -1,5 +1,7 @@
 # Basic configurations
 
+**These have only been tested with a hEX lite RouterBOARD**
+
 These are configurations that provide a basic template that makes the router 'declarative' for certain values of declarative. In essence we want a way to set the entire configuration of the router in a single file without having to know the previous state of the router. Each of these comes with a preamble that is was taken from [the Mikrotik wiki](https://wiki.mikrotik.com/wiki/Manual:Configuration_Management#Importing_Configuration). The preamble waits until a number of interfaces is online before applying the configuration.
 
 Without this delay the configuration will not correctly apply.
