@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"log/slog"
@@ -46,7 +47,13 @@ func main() {
 
 	c, err := routeros.DialTimeout(*address, *username, *password, *timeout)
 	if err != nil {
-		fatal(log, "could not dial", err)
+		if errors.Is(err, routeros.ErrInvalidAuthentication) {
+			fmt.Println("Looks like the username or password is incorrect. Please double-check what you provided via '-username' and '-password'")
+			os.Exit(1)
+		} else {
+			fmt.Println("Error dialing router:", err)
+			os.Exit(2)
+		}
 	}
 
 	c.SetLogHandler(handler)
