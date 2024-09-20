@@ -35,7 +35,7 @@ func main() {
 		Level:     logLevel,
 	})
 
-	log := slog.New(handler)
+	slog.New(handler)
 
 	c, err := routeros.DialTimeout(*address, *username, *password, *timeout)
 	if err != nil {
@@ -51,11 +51,8 @@ func main() {
 	c.SetLogHandler(handler)
 
 	// Get the number of interfaces
-	var reply *routeros.Reply
-	reply, err = c.Run("/interface/print", "=.proplist=name,tx-packet")
-	if err != nil {
-		log.Error("Failed to get interfaces", slog.Any("error", err))
-		os.Exit(3)
+	interfaces, err := c.InterfaceList()
+	for _, i := range interfaces {
+		fmt.Println(i.Name, i.TXPacket)
 	}
-	fmt.Println("Reply:", reply)
 }
