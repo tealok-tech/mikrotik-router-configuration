@@ -13,7 +13,7 @@ import (
 
 var (
 	debug      = flag.Bool("debug", false, "debug log level mode")
-	address    = flag.String("address", "192.168.0.1:8728", "Address")
+	address    = flag.String("address", "192.168.88.1:8728", "Address")
 	username   = flag.String("username", "admin", "Username")
 	password   = flag.String("password", "admin", "Password")
 	properties = flag.String("properties", "name,rx-byte,tx-byte,rx-packet,tx-packet", "Properties")
