@@ -17,6 +17,7 @@ var (
 	username   = flag.String("username", "admin", "Username")
 	password   = flag.String("password", "admin", "Password")
 	properties = flag.String("properties", "name,rx-byte,tx-byte,rx-packet,tx-packet", "Properties")
+	timeout    = flag.Duration("timeout", 10*time.Second, "Connection timeout")
 	interval   = flag.Duration("interval", 1*time.Second, "Interval")
 )
 
@@ -43,7 +44,7 @@ func main() {
 
 	log := slog.New(handler)
 
-	c, err := routeros.Dial(*address, *username, *password)
+	c, err := routeros.DialTimeout(*address, *username, *password, *timeout)
 	if err != nil {
 		fatal(log, "could not dial", err)
 	}
